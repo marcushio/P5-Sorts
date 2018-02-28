@@ -56,7 +56,7 @@ public class P5Program
      * Checks to see what type of data the file contains
      */
     private int typeCheck(){
-        //else expression probably helpful here
+        //if expression probably helpful here
         char sample = getNextLine().charAt(0);
         if(Character.isLetter(sample))return 1;
         else if(Character.isDigit(sample))return 0;
@@ -82,19 +82,26 @@ public class P5Program
     private void run(){
         System.out.println("Enter filename for the data you want to sort"); 
         try{
-            BufferedReader fileReader = new BufferedReader(new FileReader(filename = takeInput()));
+            filename = takeInput(); 
+            fileReader = new BufferedReader(new FileReader(filename));
             String dataLine = null; 
-            numbers = new ArrayList<Integer>(); 
+             
+            
             if(typeCheck() == 0){
                 while((dataLine = getNextLine()) != null){
+                    numbers = new ArrayList<Integer>();
                     numbers.add(Integer.parseInt(dataLine)); 
                 }
             } else if(typeCheck() == 1){
                 while((dataLine = getNextLine()) != null){
+                    words = new ArrayList<String>(); 
                     words.add(dataLine); 
                 }
             } else System.out.println("Data contains invalid characters (not letters or numbers)"); 
-        } catch(Exception ex){
+        }catch(IOException ex){
+            System.out.println("IOError");
+        } 
+        catch(Exception ex){
             System.out.println("Error"); 
         }
         sort();     
@@ -106,8 +113,6 @@ public class P5Program
      */
     public static void main(String[] args){
         P5Program p5 = new P5Program(); 
-        
-        
-        
+        p5.run();
     }
 }
