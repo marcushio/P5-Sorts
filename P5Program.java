@@ -13,9 +13,12 @@ public class P5Program
     Scanner keyboard;
     BufferedReader fileReader; 
     Timer timer; 
+    Sorter sorter; 
     
     ArrayList<String> words; 
     ArrayList<Integer> numbers; 
+    ArrayList<Integer> sortedNumbers; 
+    ArrayList<String> sortedWords; 
     String filename; 
     String LS = System.lineSeparator(); 
     
@@ -25,6 +28,9 @@ public class P5Program
     public P5Program(){
         keyboard = new Scanner(System.in); 
         timer = new Timer(); 
+        numbers = new ArrayList<Integer>();
+        words = new ArrayList<String>(); 
+        sorter = new Sorter(); 
     }
     
     
@@ -32,8 +38,28 @@ public class P5Program
      * Makes all the calls involved in how this program sorts (i.e. timing etc.)
      */
     private String sort(){
+        String sortResults = null; 
+        ArrayList<Integer> bubbleSortedNums = new ArrayList<>();
+        ArrayList<Integer> insertionSortedNums = new ArrayList<>();  
+        ArrayList<Integer> javaSortedNums = new ArrayList<>(); 
         
-        return "sorted"; 
+        timer.start();
+        bubbleSortedNums =  sorter.bubbleSort(numbers);
+        timer.stop(); 
+        sortResults = timer.reportTimes(); 
+        
+        timer.start(); 
+        insertionSortedNums = sorter.selectionSort(numbers); 
+        timer.stop(); 
+        sortResults += timer.reportTimes(); 
+        
+        timer.start();
+        javaSortedNums = sorter.javaSort(numbers); 
+        timer.stop(); 
+        sortResults += timer.reportTimes(); 
+        
+        System.out.println(sortResults); 
+        return sortResults; 
     }
     
     
@@ -56,11 +82,16 @@ public class P5Program
      * Checks to see what type of data the file contains
      */
     private int typeCheck(){
-        //if expression probably helpful here
-        char sample = getNextLine().charAt(0);
-        if(Character.isLetter(sample))return 1;
-        else if(Character.isDigit(sample))return 0;
-        return -1; 
+        int type = -1; 
+        try(BufferedReader sampler = new BufferedReader(new FileReader(filename))){
+            char sample = sampler.readLine().charAt(0);
+            if(Character.isLetter(sample))type = 1;
+            else if(Character.isDigit(sample))type = 0;
+            else type = -1; 
+        }catch(IOException ex){
+            System.out.println("IOException: try again"); 
+        }
+        return type; 
     }
     
     
@@ -85,17 +116,16 @@ public class P5Program
             filename = takeInput(); 
             fileReader = new BufferedReader(new FileReader(filename));
             String dataLine = null; 
-             
-            
+
             if(typeCheck() == 0){
-                while((dataLine = getNextLine()) != null){
-                    numbers = new ArrayList<Integer>();
+                while((dataLine = getNextLine()) != null){  
                     numbers.add(Integer.parseInt(dataLine)); 
+                    System.out.println(numbers.get((numbers.size()-1))); 
                 }
             } else if(typeCheck() == 1){
-                while((dataLine = getNextLine()) != null){
-                    words = new ArrayList<String>(); 
+                while((dataLine = getNextLine()) != null){                 
                     words.add(dataLine); 
+                    System.out.println(numbers.get((words.size()-1))); 
                 }
             } else System.out.println("Data contains invalid characters (not letters or numbers)"); 
         }catch(IOException ex){

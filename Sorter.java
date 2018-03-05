@@ -33,20 +33,16 @@ public class Sorter
      * 
      */
     public ArrayList<Integer> selectionSort(ArrayList<Integer> data){
-        int smallest = 0; 
-        int smallIndex = 0;
-        for(int i=1; i<data.size(); i++){
-            smallest = data.get(i-1); 
-            smallIndex = i-1; 
-            for(int j=i; j<data.size(); j++){
-                if(data.get(j) < smallest){
-                    smallest = data.get(j); 
-                    smallest = j; 
+        for(int i=0; i<data.size()-1; i++){
+            int minIndex = i;  
+            for(int j=i+1; j<data.size(); j++){
+                if(data.get(j) < data.get(minIndex)){
+                    minIndex = j;
                 }
             }
             int temp = data.get(i); 
-            data.set(i, data.get(smallIndex)); 
-            data.set(smallIndex, temp); 
+            data.set(i, data.get(minIndex)); 
+            data.set(minIndex, temp); 
         }
         return data; 
     }

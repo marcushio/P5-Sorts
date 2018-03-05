@@ -46,7 +46,7 @@ public class Timer
         double finalCPUTime = (endCPUTime - startCPUTime)/BILLION; 
         double finalClockTime = (endClockTime - startClockTime)/THOUSAND;
         String results = formatter.format(finalCPUTime) + " seconds CPU time    " + 
-                         formatter.format(finalClockTime) + " seconds clock time"; 
+                         formatter.format(finalClockTime) + " seconds clock time" + System.lineSeparator(); 
         return results; 
     }
 }
