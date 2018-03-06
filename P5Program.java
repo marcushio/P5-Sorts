@@ -15,10 +15,15 @@ public class P5Program
     Timer timer; 
     Sorter sorter; 
     
-    ArrayList<String> words; 
     ArrayList<Integer> numbers; 
-    ArrayList<Integer> sortedNumbers; 
-    ArrayList<String> sortedWords; 
+    ArrayList<Integer> bubbleSortedNums = new ArrayList<>();
+    ArrayList<Integer> insertionSortedNums = new ArrayList<>();  
+    ArrayList<Integer> javaSortedNums = new ArrayList<>(); 
+    ArrayList<String> words; 
+    ArrayList<String> bubbleSortedWords = new ArrayList<String>();
+    ArrayList<String> insertionSortedWords = new ArrayList<String>();  
+    ArrayList<String> javaSortedWords = new ArrayList<String>(); 
+    
     String filename; 
     String LS = System.lineSeparator(); 
     
@@ -28,8 +33,6 @@ public class P5Program
     public P5Program(){
         keyboard = new Scanner(System.in); 
         timer = new Timer(); 
-        numbers = new ArrayList<Integer>();
-        words = new ArrayList<String>(); 
         sorter = new Sorter(); 
     }
     
@@ -37,29 +40,58 @@ public class P5Program
     /**
      * Makes all the calls involved in how this program sorts (i.e. timing etc.)
      */
-    private String sort(){
+    private String sortNumbers(){
         String sortResults = null; 
-        ArrayList<Integer> bubbleSortedNums = new ArrayList<>();
-        ArrayList<Integer> insertionSortedNums = new ArrayList<>();  
-        ArrayList<Integer> javaSortedNums = new ArrayList<>(); 
+        bubbleSortedNums = new ArrayList<Integer>();
+        insertionSortedNums = new ArrayList<Integer>();  
+        javaSortedNums = new ArrayList<Integer>(); 
         
         timer.start();
-        bubbleSortedNums =  sorter.bubbleSort(numbers);
+        bubbleSortedNums =  sorter.numBubbleSort(numbers);
         timer.stop(); 
         sortResults = timer.reportTimes(); 
         
         timer.start(); 
-        insertionSortedNums = sorter.selectionSort(numbers); 
+        insertionSortedNums = sorter.numSelectionSort(numbers); 
         timer.stop(); 
         sortResults += timer.reportTimes(); 
         
         timer.start();
-        javaSortedNums = sorter.javaSort(numbers); 
+        javaSortedNums = sorter.numJavaSort(numbers); 
         timer.stop(); 
         sortResults += timer.reportTimes(); 
         
         System.out.println(sortResults); 
         return sortResults; 
+    }
+    
+    
+    /**
+     * 
+     */
+    private String sortWords(){
+        String sortResults = null; 
+        bubbleSortedWords = new ArrayList<String>();
+        insertionSortedWords = new ArrayList<String>();  
+        javaSortedWords = new ArrayList<String>(); 
+        
+        timer.start();
+        bubbleSortedWords=  sorter.wordBubbleSort(words);
+        timer.stop(); 
+        sortResults = timer.reportTimes(); 
+        
+        timer.start(); 
+        insertionSortedWords = sorter.wordSelectionSort(words); 
+        timer.stop(); 
+        sortResults += timer.reportTimes(); 
+        
+        timer.start();
+        javaSortedWords = sorter.wordJavaSort(words); 
+        timer.stop(); 
+        sortResults += timer.reportTimes(); 
+        
+        System.out.println(sortResults); 
+        return sortResults;    
     }
     
     
@@ -85,8 +117,14 @@ public class P5Program
         int type = -1; 
         try(BufferedReader sampler = new BufferedReader(new FileReader(filename))){
             char sample = sampler.readLine().charAt(0);
-            if(Character.isLetter(sample))type = 1;
-            else if(Character.isDigit(sample))type = 0;
+            if(Character.isLetter(sample)){
+                type = 1;
+                words = new ArrayList<String>(); 
+            }
+            else if(Character.isDigit(sample)){
+                type = 0;
+                numbers = new ArrayList<Integer>();
+            }
             else type = -1; 
         }catch(IOException ex){
             System.out.println("IOException: try again"); 
@@ -111,30 +149,35 @@ public class P5Program
      * 
      */
     private void run(){
-        System.out.println("Enter filename for the data you want to sort"); 
         try{
+            String dataLine = null; 
+            System.out.println("Enter filename for the number data you want to sort"); 
             filename = takeInput(); 
             fileReader = new BufferedReader(new FileReader(filename));
-            String dataLine = null; 
-
+            
             if(typeCheck() == 0){
                 while((dataLine = getNextLine()) != null){  
                     numbers.add(Integer.parseInt(dataLine)); 
-                    System.out.println(numbers.get((numbers.size()-1))); 
                 }
-            } else if(typeCheck() == 1){
+                sortNumbers(); 
+            } else System.out.println("Data contains invalid characters"); 
+            
+            System.out.println("Enter filename for the word data you want to sort"); 
+            filename = takeInput(); 
+            fileReader = new BufferedReader(new FileReader(filename));
+            if(typeCheck() == 1){
                 while((dataLine = getNextLine()) != null){                 
                     words.add(dataLine); 
-                    System.out.println(numbers.get((words.size()-1))); 
                 }
-            } else System.out.println("Data contains invalid characters (not letters or numbers)"); 
+                sortWords();
+            } else System.out.println("Data contains invalid characters"); 
         }catch(IOException ex){
             System.out.println("IOError");
         } 
         catch(Exception ex){
             System.out.println("Error"); 
         }
-        sort();     
+            
     }
     
     

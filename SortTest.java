@@ -29,19 +29,19 @@ public class SortTest
                 System.out.println(numbers.get((numbers.size()-1))); 
             }
             
-            sorted = sorter.bubbleSort(numbers);
+            sorted = sorter.numBubbleSort(numbers);
             System.out.println("bubble--------------"); 
             for(Integer element : sorted){
                 System.out.println(element); 
             }
             sorted = null;
-            sorted = sorter.selectionSort(numbers); 
+            sorted = sorter.numSelectionSort(numbers); 
             System.out.println("selection---------------");
             for(Integer element : sorted){
                 System.out.println(element); 
             }
             sorted = null;
-            sorted = sorter.javaSort(numbers);
+            sorted = sorter.numJavaSort(numbers);
             System.out.println("java=============");
             for(Integer element : sorted){
                 System.out.println(element); 
