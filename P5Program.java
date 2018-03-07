@@ -21,10 +21,12 @@ public class P5Program
     ArrayList<Integer> javaSortedNums = new ArrayList<>(); 
     ArrayList<String> words; 
     ArrayList<String> bubbleSortedWords = new ArrayList<String>();
-    ArrayList<String> insertionSortedWords = new ArrayList<String>();  
+    ArrayList<String> selectionSortedWords = new ArrayList<String>();  
     ArrayList<String> javaSortedWords = new ArrayList<String>(); 
     
     String filename; 
+    static final String OUTPUT_FILENAME = "P5Output.txt"; 
+    String results; 
     String LS = System.lineSeparator(); 
     
     /**
@@ -34,6 +36,7 @@ public class P5Program
         keyboard = new Scanner(System.in); 
         timer = new Timer(); 
         sorter = new Sorter(); 
+        results = ""; 
     }
     
     
@@ -72,7 +75,7 @@ public class P5Program
     private String sortWords(){
         String sortResults = null; 
         bubbleSortedWords = new ArrayList<String>();
-        insertionSortedWords = new ArrayList<String>();  
+        selectionSortedWords = new ArrayList<String>();  
         javaSortedWords = new ArrayList<String>(); 
         
         timer.start();
@@ -81,7 +84,7 @@ public class P5Program
         sortResults = timer.reportTimes(); 
         
         timer.start(); 
-        insertionSortedWords = sorter.wordSelectionSort(words); 
+        selectionSortedWords = sorter.wordSelectionSort(words); 
         timer.stop(); 
         sortResults += timer.reportTimes(); 
         
@@ -111,6 +114,16 @@ public class P5Program
     
     
     /**
+     * Writes the results to a txt file.
+     */
+    private void writeResults(){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(new File(OUTPUT_FILENAME), true))){
+            writer.write(results);
+        }catch(Exception ex) {System.out.println("Couldn't write to file"); }
+    }
+    
+    
+    /**
      * Checks to see what type of data the file contains
      */
     private int typeCheck(){
@@ -134,50 +147,32 @@ public class P5Program
     
     
     /**
-     * Reads the line of the document. Mainly made so I don't have to make so many trycatch
-     */
-    private String getNextLine(){
-        String textLine = null; 
-        try{
-            textLine = fileReader.readLine();
-        }catch(Exception ex) {System.out.println("Read error"); }  
-        return textLine; 
-    }
-    
-    
-    /**
      * 
      */
     private void run(){
         try{
             String dataLine = null; 
-            System.out.println("Enter filename for the number data you want to sort"); 
+            System.out.println("Enter filename for the data you want to sort"); 
             filename = takeInput(); 
-            fileReader = new BufferedReader(new FileReader(filename));
+            BufferedReader fileReader = new BufferedReader(new FileReader(filename));
             
             if(typeCheck() == 0){
-                while((dataLine = getNextLine()) != null){  
+                while((dataLine = fileReader.readLine()) != null){  
                     numbers.add(Integer.parseInt(dataLine)); 
                 }
-                sortNumbers(); 
-            } else System.out.println("Data contains invalid characters"); 
-            
-            System.out.println("Enter filename for the word data you want to sort"); 
-            filename = takeInput(); 
-            fileReader = new BufferedReader(new FileReader(filename));
-            if(typeCheck() == 1){
-                while((dataLine = getNextLine()) != null){                 
+                results += "There are " + numbers.size() + " numbers in this file." + LS + sortNumbers() + LS; 
+            } else if(typeCheck() == 1){
+                while((dataLine = fileReader.readLine()) != null){                 
                     words.add(dataLine); 
                 }
-                sortWords();
+                results += "There are " + words.size() + " words in this file." + LS + sortWords() + LS; 
             } else System.out.println("Data contains invalid characters"); 
-        }catch(IOException ex){
-            System.out.println("IOError");
-        } 
-        catch(Exception ex){
-            System.out.println("Error"); 
+            fileReader.close(); 
+        } catch(Exception ex){
+            System.out.println("There is something wrong with that file."); 
         }
-            
+        System.out.println("Writing to P5Output.txt"); 
+        writeResults();     
     }
     
     
@@ -186,6 +181,13 @@ public class P5Program
      */
     public static void main(String[] args){
         P5Program p5 = new P5Program(); 
-        p5.run();
+        boolean running = true; 
+        while(running){
+            p5.run();
+            System.out.println("Enter 'y' to load another file, any other character will exit the program"); 
+            if(!p5.takeInput().equalsIgnoreCase("y")){
+                running = false; 
+            }
+        }
     }
 }

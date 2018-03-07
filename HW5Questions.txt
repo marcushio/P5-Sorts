@@ -1,0 +1,6 @@
+2.1.3 - An example of an array that maximizes the number of times the test
+fails would simply be an array that is in reverse sorted order. It would have
+to update min every time. 
+
+2.1.5 - Unless I'm misreading this question, this condition would be when the 
+collection has been sorted. 

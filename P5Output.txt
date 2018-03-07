@@ -1,0 +1,5 @@
+There are 18 words in this file.
+0.00006783 seconds CPU time    0.00100000 seconds clock time
+0.00004016 seconds CPU time    0.00000000 seconds clock time
+0.00023294 seconds CPU time    0.00000000 seconds clock time
+
